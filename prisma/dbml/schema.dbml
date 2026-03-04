@@ -1,0 +1,50 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table users {
+  id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  role Role [not null, default: 'EMPLOYEE']
+  created_at DateTime [default: `now()`, not null]
+  bookings bookings [not null]
+}
+
+Table rooms {
+  id String [pk]
+  name String [not null]
+  capacity Int [not null]
+  location String [not null]
+  created_at DateTime [default: `now()`, not null]
+  bookings bookings [not null]
+}
+
+Table bookings {
+  id String [pk]
+  title String [not null]
+  description String
+  start_time DateTime [not null]
+  end_time DateTime [not null]
+  status BookingStatus [not null, default: 'BOOKED']
+  created_at DateTime [default: `now()`, not null]
+  user_id String [not null]
+  room_id String [not null]
+  user users [not null]
+  room rooms [not null]
+}
+
+Enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+Enum BookingStatus {
+  BOOKED
+  CANCELLED
+}
+
+Ref: bookings.user_id > users.id [delete: Cascade]
+
+Ref: bookings.room_id > rooms.id [delete: Cascade]

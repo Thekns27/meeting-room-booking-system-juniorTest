@@ -1,0 +1,9 @@
+export const ERROR_CODES = {
+  CONFLICT_EMAIL: 'CONFLICT_EMAIL',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  INVALID_INPUT: 'INVALID_INPUT',
+  CONFLICT_ROOM_NAME: 'CONFLICT_ROOM_NAME'
+  // add more as needed
+} as const;
+
+export type ERROR_CODES = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
