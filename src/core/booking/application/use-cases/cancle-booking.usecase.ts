@@ -21,15 +21,19 @@ export class CancelBookingUseCase {
       throw new NotFoundException('Booking not found');
     }
 
-    if (booking.toPrimitives.status === 'CANCELLED') {
-      throw new ConflictException('Booking is already cancelled');
-    }
-    if (booking.toPrimitives.user_id !== userId && userRole !== 'ADMIN') {
+    const data = (booking as any).toPrimitives;
+    if (data.user_id !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException(
         'You do not have permission to cancel this booking',
       );
     }
 
-    return await this.bookingRepo.updateStatus(bookingId, 'CANCELLED');
+    if (data.status === 'CANCELLED') {
+      throw new ConflictException('Booking is already cancelled');
+    }
+
+    await this.bookingRepo.updateStatus(bookingId, 'CANCELLED');
+
+    return { message: 'Booking cancelled successfully', id: bookingId };
   }
 }

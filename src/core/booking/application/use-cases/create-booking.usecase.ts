@@ -16,7 +16,7 @@ export class CreateBookingUseCase {
   constructor(
     @Inject(REPOSITORY_TOKEN.BOOKING)
     private readonly bookingRepo: IBookingRepository,
-    @Inject(REPOSITORY_TOKEN.ROOM) 
+    @Inject(REPOSITORY_TOKEN.ROOM)
     private readonly roomRepo: IRoomRepository,
   ) {}
 
@@ -24,10 +24,16 @@ export class CreateBookingUseCase {
     const startTime = new Date(dto.start_time);
     const endTime = new Date(dto.end_time);
 
+    const now = new Date();
+
     if (startTime >= endTime)
       throw new BadRequestException('End time must be after start time');
-    if (startTime < new Date(Date.now() - 60000))
-      throw new BadRequestException('Cannot book in the past');
+
+    if (startTime.getTime() < now.getTime() - 60000) {
+      throw new BadRequestException(
+        `Cannot book in the past. Your local time is ${now.toLocaleString('en-GB', { timeZone: 'Asia/Yangon' })} (MMT)`,
+      );
+    }
 
     const room = await this.roomRepo.findById(dto.room_id);
     if (!room) throw new NotFoundException('Room not found');
@@ -49,7 +55,7 @@ export class CreateBookingUseCase {
       userId: userId,
       status: 'BOOKED',
     });
+
     return await this.bookingRepo.save(bookingEntity);
   }
 }
-

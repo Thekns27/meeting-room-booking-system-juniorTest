@@ -14,6 +14,7 @@ export class Booking {
   ) {}
 
   static create(data: {
+    id?: string;
     title: string;
     description?: string;
     startTime: Date;
@@ -23,7 +24,7 @@ export class Booking {
     status?: BookingStatus;
   }): Booking {
     return new Booking(
-      null,
+      data.id || null,
       data.title,
       data.description || null,
       data.startTime,
@@ -37,7 +38,7 @@ export class Booking {
 
   static fromPrimitives(data: Booking): Booking {
     return new Booking(
-      data.id,
+      data.id || null,
       data.title,
       data.description,
       new Date(data.startTime),
@@ -67,3 +68,4 @@ export class Booking {
     return this.startTime < this.endTime;
   }
 }
+

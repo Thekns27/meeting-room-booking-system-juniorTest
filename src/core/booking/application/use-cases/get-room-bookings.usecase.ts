@@ -9,7 +9,7 @@ export class GetRoomBookingsUseCase {
     private readonly bookingRepo: IBookingRepository,
   ) {}
 
-  async execute(roomId: string) {
-    return await this.bookingRepo.findByRoomId(roomId);
+  async execute(room_id: string) {
+    return await this.bookingRepo.findByRoomId(room_id);
   }
 }

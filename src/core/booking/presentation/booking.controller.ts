@@ -46,17 +46,21 @@ export class BookingController {
   }
 
   @Patch(':id/cancel')
-  @ApiOperation({ summary: 'cancel booking' })
-  async cancel(@Param('id') id: string, @Req() req: any) {
-    return await this.cancelBookingUseCase.execute(
-      id,
-      req.user.id,
-      req.user.role,
-    );
-  }
+@ApiOperation({ summary: 'Cancel a booking' })
+async cancel(
+  @Param('id') id: string,
+  @Req() req: any
+) {
+  const { id: userId, role: userRole } = req.user;
+  return await this.cancelBookingUseCase.execute(
+    id,
+    userId,
+    userRole,
+  );
+}
 
   @Get()
-  // @Roles('ADMIN')
+  @Roles('ADMIN')
   @ApiOperation({ summary: 'get all bookings by admin' })
   async findAll() {
     return await this.getAllBookingsUseCase.execute();
